@@ -1,0 +1,5 @@
+---
+triple:          'arm64-apple-darwin'
+binary-path:     '/Users/kriskashyap/Repos/CPlusPlus Projects/Energy-Grid-Simulator/main'
+relocations:     []
+...
