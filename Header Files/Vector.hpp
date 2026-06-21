@@ -42,7 +42,7 @@ public:
         m_data = alloc.allocate(m_capacity);
     }
 
-    Vector(std::initializer_list<T> list) // For when {1,2,3} is used
+    Vector(std::initializer_list<T> list) // For when something like {1,2,3} is used
     {
         m_size = 0;
         m_capacity = list.size();
@@ -55,7 +55,7 @@ public:
         }
     }
 
-    Vector(const Vector &other) // Ro5: Copy constructor
+    Vector(const Vector &other) // Rule of 5 (Ro5): Copy constructor
     {
         m_size = other.m_size;
         m_capacity = other.m_capacity;
@@ -88,7 +88,7 @@ public:
         alloc.deallocate(m_data, m_capacity);
     }
 
-    void push_back(const T &value) // Add an element to the end of the array
+    void push_back(const T &value) // Add an element to the end of the array, resizing as needed
     {
         if (m_size == m_capacity)
         {
@@ -132,7 +132,7 @@ public:
         m_size--;
     }
 
-    T &operator[](size_t index) // Operator overload to make array syntax available
+    T &operator[](size_t index) // Operator overload to make general array syntax available
     {
         return m_data[index];
     }
