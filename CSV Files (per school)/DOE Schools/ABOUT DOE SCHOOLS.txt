@@ -1,0 +1,7 @@
+These schools were worked on by the Building Decarbonization team of the Climate Action Pathways for Schools (CAPS) internship. 
+They are called "DOE" schools because the main source of funding for the project was >$5 million from the Department of Energy (or DOE).
+These schools have been retrofitted with LED lighting kits, new HVAC systems with heat pumps, and Building Automation Systems (BAS).
+These schools should have the best energy effciency, but because the work has been completed very recently, we (on behalf of CAPS) are working to measure and verify these effects.
+One of the goals of this project is to be able to compare performance of DOE and non-DOE schools via 15-minute interval data in the future.
+Some of the other goals include looking at current interval data to determine, behaviorally, when schools are asking for more electricity and when they aren't, which can be done through analysis of the results of the engine created by the project.
+You will notice the abundance of Elementary schools and the lack of Middle and High schools. I don't know the exact reason for this, but this is just the way it is. All data will be normalized by dividing by the square footage of the school, a known number.

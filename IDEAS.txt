@@ -1,0 +1,3 @@
+(ongoing)
+The purpose of this document is to document ideas that may pop up when determining how to analyze the data and what data to model for the engine.
+This may be deleted when the final version is published, and is not a functionally important part of the code in any way; this is just something extra for me, given I'm the only one to work on this project.
