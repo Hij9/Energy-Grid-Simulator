@@ -3,14 +3,20 @@
 #include <string>
 #include <filesystem>
 #include <fstream>
+#include <sstream>
+#include "Vector.hpp"
+#include "DataTypes.hpp"
 
 namespace fs = std::filesystem;
 
-void traverseDirectories(const std::string &targetDirectory)
+Vector<std::string> getCSVPaths(const std::string &rootFolder)
 {
-    for (const auto &entry : fs::recursive_directory_iterator(targetDirectory))
+    Vector<std::string> paths;
+
+    for (const auto &entry : fs::recursive_directory_iterator(rootFolder))
     {
-        if (entry.is_regular_file())
+
+        if (!entry.is_regular_file())
         {
             continue;
         }
@@ -20,13 +26,13 @@ void traverseDirectories(const std::string &targetDirectory)
             continue;
         }
 
-        std::string full_path = entry.path().string();
-
-        bool isDOE = false;
-
-        if (full_path.find("DOE Schools") != std::string::npos)
-        {
-            isDOE = true;
-        }
+        std::string fullFilePath = entry.path().string();
+        paths.push_back(fullFilePath);
     }
+    return paths;
+}
+
+Vector<IntervalData> parseCSV(const std::string &path)
+{
+    // Add code here
 }
