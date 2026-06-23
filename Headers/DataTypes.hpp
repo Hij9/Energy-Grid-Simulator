@@ -1,4 +1,3 @@
-
 #pragma once
 #include <string>
 #include "Vector.hpp"
@@ -14,10 +13,11 @@ struct IntervalData
     double Received;
 };
 
+// Master/School info; container accessed by nodes and abbreviated MMP
 struct MasterMeterProfile
 {
     bool isDOE = false;
     std::string schoolLevel;
     std::string schoolName;
-    Vector<IntervalData> School;
+    Vector<IntervalData> Meter;
 };
