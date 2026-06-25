@@ -16,6 +16,7 @@ struct IntervalData
 // Master/School info; container accessed by nodes and abbreviated MMP
 struct MasterMeterProfile
 {
+    int squareFootage = 0;
     bool isDOE = false;
     std::string schoolLevel;
     std::string schoolName;

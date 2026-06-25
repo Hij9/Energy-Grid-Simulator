@@ -1,10 +1,10 @@
-
 #include <iostream>
 #include <string>
 #include <filesystem>
 #include <fstream>
 #include <sstream>
 #include <algorithm>
+#include <unordered_map>
 #include "Vector.hpp"
 #include "DataTypes.hpp"
 #include "Parser.hpp"
@@ -53,44 +53,35 @@ Vector<IntervalData> parseCSV(const std::string &path)
     }
 
     Vector<IntervalData> parsedTick;
+    IntervalData currentTick;
+    std::string cell;
 
-    // Parsing
+    // Parsing loop (per line of data)
     while (std::getline(file, line))
     {
         // Clean the string so it doesn't crash the program because of stod
         line.erase(std::remove(line.begin(), line.end(), '"'), line.end());
 
-        // Data parsing vars (I just want them all to be in one place)
-        std::string date;
-        std::string start;
-        std::string end;
-        double delivered;
-        double received;
+        // Gaurd clause to ensure the line has 4 commas (rest is garbage data) so stod doesn't throw a fit (again)
+        if (std::count(line.begin(), line.end(), ',') != 4)
+        {
+            continue;
+        }
 
         std::stringstream ss(line);
-        std::string cell;
+
+        // Parse and store
+        std::getline(ss, currentTick.Date, ',');
+
+        std::getline(ss, currentTick.startTime, ',');
+
+        std::getline(ss, currentTick.endTime, ',');
 
         std::getline(ss, cell, ',');
-        date = cell;
+        currentTick.Delivered = std::stod(cell);
 
         std::getline(ss, cell, ',');
-        start = cell;
-
-        std::getline(ss, cell, ',');
-        end = cell;
-
-        std::getline(ss, cell, ',');
-        delivered = std::stod(cell);
-
-        std::getline(ss, cell, ',');
-        received = std::stod(cell);
-
-        IntervalData currentTick;
-        currentTick.Date = date;
-        currentTick.startTime = start;
-        currentTick.endTime = end;
-        currentTick.Delivered = delivered;
-        currentTick.Received = received;
+        currentTick.Received = std::stod(cell);
 
         parsedTick.push_back(currentTick);
     }
@@ -105,6 +96,8 @@ Vector<MasterMeterProfile> getMMPList(const std::string &rootFolder)
     Vector<std::string> CSVP = getCSVPaths(rootFolder);
 
     Vector<MasterMeterProfile> SchoolInformation;
+
+    std::unordered_map<std::string, int> sqftInfo = sqft();
 
     for (std::string &filePath : CSVP)
     {
@@ -168,6 +161,17 @@ Vector<MasterMeterProfile> getMMPList(const std::string &rootFolder)
             Campus.schoolLevel = level;
             Campus.schoolName = name;
             Campus.isDOE = DOE;
+
+            auto find = sqftInfo.find(name);
+            if (find != sqftInfo.end())
+            {
+                Campus.squareFootage = find->second;
+            }
+            else
+            {
+                std::cerr << "Error: Square Footage not found for school " << name << std::endl;
+            }
+
             SchoolInformation.push_back(Campus);
             continue;
         }
@@ -179,7 +183,7 @@ Vector<MasterMeterProfile> getMMPList(const std::string &rootFolder)
         // Check for missing lines in meter data
         if (address->Meter.size() != singleMeter.size())
         {
-            std::cerr << "Error: Meter Data Misalignment at " << address->schoolName << std::endl;
+            std::cerr << "Error: Meter Data Misalignment at object " << address->schoolName << std::endl;
             continue;
         }
 
@@ -191,4 +195,40 @@ Vector<MasterMeterProfile> getMMPList(const std::string &rootFolder)
     }
 
     return SchoolInformation;
+}
+
+// Dictionary of all square foot values of schools
+std::unordered_map<std::string, int> sqft()
+{
+    std::unordered_map<std::string, int> campusSize;
+    // DOE Elementaries
+    campusSize["Belleview Elementary"] = 31539;
+    campusSize["John J. Doyle Elementary"] = 46508;
+    campusSize["Los Robles Elementary"] = 44876;
+    campusSize["Roche Elementary"] = 25177;
+    campusSize["West Putnam Elementary"] = 37286;
+
+    // DOE Middle/High Schools
+    campusSize["Granite Hills High School"] = 149387;
+    campusSize["Bartlett Middle School"] = 64458;
+
+    // Non-DOE Elementaries
+    campusSize["Monte Vista Elementary"] = 45259;
+    campusSize["Olive Street Elementary"] = 52911;
+    campusSize["Santa Fe Elementary"] = 47043;
+    campusSize["Vandalia Elementary"] = 53791;
+    campusSize["Westfield Elementary"] = 47494;
+
+    // Non-DOE Middle Schools
+    campusSize["Pioneer Middle School"] = 60306;
+    campusSize["Sequoia Middle School"] = 51692;
+
+    // Non-DOE High Schools
+    campusSize["Citrus High School"] = 12668;
+    campusSize["Harmony Magnet Academy"] = 51392;
+    campusSize["Monache High School"] = 196387;
+    campusSize["Porterville High School"] = 258834;
+    campusSize["Strathmore High School"] = 64012;
+    // Could not include Porterville Military Academy and Butterfield because of a lack of sqft knowledge for the former and a lack of electric data on the latter. A reason to explain why is that these two schoools are conjoined in the same building. Include note about not adding in Preschools later
+    return campusSize;
 }

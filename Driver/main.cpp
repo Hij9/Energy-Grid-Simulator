@@ -12,17 +12,16 @@ int main()
 {
     Vector<MasterMeterProfile> database = getMMPList("CSV Files");
 
+    cout << database.size() << endl;
+
     for (auto &m : database)
     {
         cout << boolalpha << m.isDOE << endl;
         cout << m.schoolLevel << endl;
         cout << m.schoolName << endl;
+        cout << m.squareFootage << endl;
         cout << m.Meter.size() << endl;
         cout << endl;
-    }
-    for (size_t i = 0; i < 3; i++)
-    {
-        cout << database[0].Meter[i].Delivered << endl;
     }
     return 0;
 }
