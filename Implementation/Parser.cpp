@@ -229,6 +229,7 @@ std::unordered_map<std::string, int> sqft()
     campusSize["Monache High School"] = 196387;
     campusSize["Porterville High School"] = 258834;
     campusSize["Strathmore High School"] = 64012;
-    // Could not include Porterville Military Academy and Butterfield because of a lack of sqft knowledge for the former and a lack of electric data on the latter. A reason to explain why is that these two schoools are conjoined in the same building. Include note about not adding in Preschools later
+    /* Could not include Porterville Military Academy and Butterfield because of a lack of sqft knowledge for the former and a lack of electric data on the latter.
+    A reason to explain why is that these two schoools are conjoined in the same building. Include note about not adding in Preschools later */
     return campusSize;
 }
