@@ -13,6 +13,6 @@ public:
     campusNode();
     campusNode(MasterMeterProfile *assignedProfile);
     double processTick(size_t tick);
-    double getNetLoad();
-    std::string getName();
+    double getNetLoad() const;
+    std::string getName() const;
 };

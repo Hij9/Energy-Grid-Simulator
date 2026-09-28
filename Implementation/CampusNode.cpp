@@ -25,12 +25,12 @@ double campusNode::processTick(size_t tick)
 
 // Getters
 
-double campusNode::getNetLoad()
+double campusNode::getNetLoad() const
 {
     return currentNetLoad;
 }
 
-std::string campusNode::getName()
+std::string campusNode::getName() const
 {
     return profile->schoolName;
 }

@@ -12,6 +12,7 @@ private:
 public:
     void pushToContainer(campusNode *node);
     double processNetworkTick(size_t tick);
-    double getTotalGridLoad();
+    double getTotalGridLoad() const;
+    void deletePointersInVector();
     // When returning to add more aggregate numbers based on simulation requirements, add more getters here
 };

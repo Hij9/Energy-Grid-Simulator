@@ -23,9 +23,18 @@ double GridNode::processNetworkTick(size_t tick)
     return totalNetGridLoad;
 }
 
+void GridNode::deletePointersInVector()
+{
+    for (auto &ptr : connections) // You don't see a reference on a pointer every day! (at least for me...)
+    {
+        delete ptr;
+        ptr = nullptr;
+    }
+}
+
 // Getters
 
-double GridNode::getTotalGridLoad()
+double GridNode::getTotalGridLoad() const
 {
     return totalNetGridLoad;
 }
