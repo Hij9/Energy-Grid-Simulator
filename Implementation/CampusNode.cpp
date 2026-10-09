@@ -34,3 +34,8 @@ std::string campusNode::getName() const
 {
     return profile->schoolName;
 }
+
+int campusNode::getSquareFootage() const
+{
+    return profile->squareFootage;
+}

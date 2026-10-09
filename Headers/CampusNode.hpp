@@ -15,4 +15,5 @@ public:
     double processTick(size_t tick);
     double getNetLoad() const;
     std::string getName() const;
+    int getSquareFootage() const;
 };

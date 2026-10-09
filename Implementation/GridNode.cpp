@@ -34,7 +34,12 @@ void GridNode::deletePointersInVector()
 
 // Getters
 
-double GridNode::getTotalGridLoad() const
+double GridNode::getTotalGridLoad()
 {
     return totalNetGridLoad;
+}
+
+Vector<campusNode *> &GridNode::getConnections()
+{
+    return connections;
 }
