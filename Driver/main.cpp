@@ -13,7 +13,7 @@ using namespace std;
 
 int main()
 {
-    string simulatorPath = "External Files/Simulator Output/SimulatorOutputFile.csv";
+    string simulatorPath = "External Files/Simulator Output/Non-Visualizer Files/SimulatorOutputFile.csv";
     Vector<MasterMeterProfile> database = getMMPList("External Files/CSV Input Files");
     GridNode Graph;
     CSVExporter Output(simulatorPath);
