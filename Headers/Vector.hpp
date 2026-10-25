@@ -161,6 +161,11 @@ public:
         }
     }
 
+    bool isEmpty() const // Checks if array is empty
+    {
+        return (m_size == 0);
+    }
+
     Vector &operator=(const Vector &other) // Ro5: Copy assignment operator overload
     {
         if (this == &other)

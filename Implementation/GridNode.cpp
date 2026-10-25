@@ -2,6 +2,8 @@
 #include "CampusNode.hpp"
 #include "Vector.hpp"
 #include <string>
+#include <optional>
+#include <limits>
 
 void GridNode::pushToContainer(campusNode *node)
 {
@@ -10,17 +12,46 @@ void GridNode::pushToContainer(campusNode *node)
 
 double GridNode::processNetworkTick(size_t tick)
 {
-    // Reset all aggregate state variables to zero
+    // Reset
     totalNetGridLoad = 0;
 
-    // Loop through the nodes and do what's needed for each aggregate state variable
+    // Loop through the nodes and calculate
     for (campusNode *school : connections)
     {
-        // totalNetGridLoad:
         school->processTick(tick);
-        totalNetGridLoad += school->getNetLoad();
+
+        if (school->getNetLoad() > 0.0)
+        {
+            totalNetGridLoad += school->getNetLoad() * (1 + lineLossFactor);
+        }
+        else
+        {
+            totalNetGridLoad += school->getNetLoad();
+        }
+    }
+    if (totalNetGridLoad > peakThreshold || totalNetGridLoad < backFeedLimit)
+    {
+        overloadTicks++;
     }
     return totalNetGridLoad;
+}
+
+campusNode *GridNode::getCampus(const std::string &name)
+{
+    for (auto &school : connections)
+    {
+        if (school->getName() == name)
+        {
+            return school;
+        }
+    }
+    std::cerr << "Error: School was not found among CampusNodes. Returning nullptr." << std::endl;
+    return nullptr;
+}
+
+size_t GridNode::getOverloadTicks() const
+{
+    return overloadTicks;
 }
 
 void GridNode::deletePointersInVector()
@@ -34,7 +65,7 @@ void GridNode::deletePointersInVector()
 
 // Getters
 
-double GridNode::getTotalGridLoad()
+double GridNode::getTotalGridLoad() const
 {
     return totalNetGridLoad;
 }
@@ -42,4 +73,24 @@ double GridNode::getTotalGridLoad()
 Vector<campusNode *> &GridNode::getConnections()
 {
     return connections;
+}
+
+// Setters
+void GridNode::setLineAndThresholds(std::optional<double> lineFactor, std::optional<double> peakThresh, std::optional<double> backFeed)
+{
+    lineLossFactor = lineFactor.value_or(0.0);
+    // If there is no input, make it so that totalNetGridLoad cannot exceed or be under the conditions for an overloaded tick
+    peakThreshold = peakThresh.value_or(std::numeric_limits<double>::max());
+    backFeedLimit = backFeed.value_or(std::numeric_limits<double>::lowest());
+}
+
+void GridNode::setNonDOERetrofits(std::optional<double> demandMult, std::optional<double> solarMult)
+{
+    for (auto &school : connections)
+    {
+        if (!school->isDOE())
+        {
+            school->setMultipliers(demandMult, solarMult);
+        }
+    }
 }

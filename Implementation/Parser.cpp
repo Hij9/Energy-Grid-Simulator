@@ -22,8 +22,7 @@ Vector<std::string> getCSVPaths(const std::string &rootFolder)
         {
             continue;
         }
-
-        if (entry.path().extension() != ".csv")
+        else if (entry.path().extension() != ".csv")
         {
             continue;
         }
