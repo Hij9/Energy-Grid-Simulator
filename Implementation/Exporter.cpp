@@ -31,6 +31,11 @@ void CSVExporter::WriteToFile(size_t tick, std::string date, std::string time, G
     }
 }
 
+void CSVExporter::closeFile()
+{
+    outFile.close();
+}
+
 CSVExporter::~CSVExporter()
 {
     outFile.close();

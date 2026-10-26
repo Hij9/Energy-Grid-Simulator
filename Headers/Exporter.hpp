@@ -15,5 +15,6 @@ public:
     CSVExporter();
     CSVExporter(std::string relativePath); // Actual constructor
     void WriteToFile(size_t tick, std::string date, std::string time, GridNode &grid);
+    void closeFile();
     ~CSVExporter();
 };
