@@ -45,6 +45,7 @@ Vector<IntervalData> parseCSV(const std::string &path)
     }
 
     std::string line;
+
     // Loop through first 12 lines of unneeded data
     for (int i = 0; i < 12; i++)
     {
@@ -133,6 +134,7 @@ Vector<MasterMeterProfile> getMMPList(const std::string &rootFolder)
             std::cerr << "Error: school level not found." << std::endl;
             return Vector<MasterMeterProfile>();
             // Note: make sure to add a check somewhere in the future to see if this is empty before simulation start. If it is, then terminate program
+            // Note 2 (from the future): I'm not sure if I will.
         }
 
         size_t endpos = filePath.find_last_of('/');
@@ -196,7 +198,6 @@ Vector<MasterMeterProfile> getMMPList(const std::string &rootFolder)
     return SchoolInformation;
 }
 
-// Dictionary of all square foot values of schools
 std::unordered_map<std::string, int> sqft()
 {
     std::unordered_map<std::string, int> campusSize;
@@ -229,6 +230,6 @@ std::unordered_map<std::string, int> sqft()
     campusSize["Porterville High School"] = 258834;
     campusSize["Strathmore High School"] = 64012;
     /* Could not include Porterville Military Academy and Butterfield because of a lack of sqft knowledge for the former and a lack of electric data on the latter.
-    A reason to explain why is that these two schoools are conjoined in the same building. Include note about not adding in Preschools later */
+    A reason is that these two schoools are conjoined in the same building. Include note about not adding in Preschools later */
     return campusSize;
 }

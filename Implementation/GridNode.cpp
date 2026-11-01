@@ -12,7 +12,7 @@ void GridNode::pushToContainer(campusNode *node)
 
 double GridNode::processNetworkTick(size_t tick)
 {
-    // Reset
+    // Reset per tick
     totalNetGridLoad = 0;
 
     // Loop through the nodes and calculate
@@ -26,7 +26,7 @@ double GridNode::processNetworkTick(size_t tick)
         }
         else
         {
-            totalNetGridLoad += school->getNetLoad();
+            totalNetGridLoad += school->getNetLoad() * (1 - lineLossFactor);
         }
     }
     if (totalNetGridLoad > peakThreshold || totalNetGridLoad < backFeedLimit)
@@ -56,7 +56,7 @@ size_t GridNode::getOverloadTicks() const
 
 void GridNode::deletePointersInVector()
 {
-    for (auto &ptr : connections) // You don't see a reference on a pointer every day! (at least for me...)
+    for (auto &ptr : connections) // You don't see a reference on a pointer every day! Or, I don't at least.
     {
         delete ptr;
         ptr = nullptr;

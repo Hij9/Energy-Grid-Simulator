@@ -50,7 +50,7 @@ int main()
     // Simulator config
     if (!isBaseline)
     {
-        // Write any configurations here
+        // Write any site configurations here
         campusNode *GHHS = Graph.getCampus("Granite Hills High School");
         if (GHHS != nullptr)
         {

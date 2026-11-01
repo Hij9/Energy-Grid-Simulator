@@ -5,7 +5,7 @@
 #include <memory>
 #include <utility>
 #include <initializer_list>
-#include <new> // Added because of best practice, which I didn't know before
+#include <new>
 
 template <typename T>
 class Vector

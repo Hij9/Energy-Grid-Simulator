@@ -1,5 +1,5 @@
 # Python for the frontend visualizer of the simulation
-# Use python3 Visualizer/visualizer.py to run this file - or just use the button in the top right
+# (ONLY USE IF TESTING THIS FILE WITHOUT RUNNING C++ SIMULATION) Use python3 Visualizer/visualizer.py to run this file - or the button in the top right
 # Because I'm very new to python data science capabilities, I'm going to over-comment to understand what I'm doing
 
 import sys
@@ -94,7 +94,7 @@ for i in schoolsTable.groupby("Entity Name"):
     schoolData = i[1]
     schoolFolderPath = f"{baseGraphPath}/Schools/{schoolName}"
 
-    # Make folders based on how many schools show up in the csv report thingy
+    # Dynamically generate output directories dependant on how many unique sites show up in the C++ output
     os.makedirs(schoolFolderPath,exist_ok=True)
 
     # Pivot tabe for graphs

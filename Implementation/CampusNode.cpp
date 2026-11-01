@@ -5,13 +5,6 @@
 #include "CampusNode.hpp"
 #include "DataTypes.hpp"
 
-// Default constructor (this is here just in case something goes wrong)
-campusNode::campusNode()
-{
-    profile = nullptr;
-    std::cerr << "Warning: instantiation of campusNode without attributing an assigned profile" << std::endl;
-}
-
 // Practical constructor, gets the profile
 campusNode::campusNode(MasterMeterProfile *assignedProfile)
 {
@@ -87,6 +80,6 @@ void campusNode::setBESS_Sim(bool simulationKey, std::optional<double> batCap, s
     if (batteryCapacity <= 0.0 || batteryCharge < 0.0 || maxChargeRate <= 0.0 || dischargeThreshold < 0.0)
     {
         BESS_Simulation = false;
-        std::cout << "BESS Simulation unable to run; failure to set proper parameters." << std::endl;
+        std::cout << "BESS Simulation unable to run due to a failure to set proper parameters." << std::endl;
     }
 }
