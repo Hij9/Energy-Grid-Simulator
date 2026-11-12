@@ -35,3 +35,14 @@ struct MasterMeterProfile
     std::string schoolName;
     Vector<IntervalData> Meter;
 };
+
+/**
+ * @brief
+ *
+ */
+struct WeatherData
+{
+    double temperature; // IN CELCIUS
+    double irradiance;
+    std::string timestamp; // Debugging purposes
+};

@@ -4,6 +4,7 @@
 #include <cstdlib>
 #include <string>
 #include <fstream>
+#include <filesystem>
 #include "DataTypes.hpp"
 #include "Vector.hpp"
 #include "Parser.hpp"
@@ -17,8 +18,8 @@ int main()
 {
     // Simulator Setup
 
-    // To Python file
-    string runPython;
+    // To Visualizer Python file
+    string runVisualizer;
     string targetFolder;
     bool isBaseline;
     char ans;
@@ -36,6 +37,7 @@ int main()
     }
 
     // C++ engine setup
+    string weatherPath = "External Files/Weather Data/WeatherData.csv";
     string simulatorPath = "External Files/Simulator Output/Non-Visualizer Files/SimulatorOutputFile.csv";
     Vector<MasterMeterProfile> database = getMMPList("External Files/CSV Input Files");
     GridNode Graph;
@@ -47,6 +49,25 @@ int main()
     }
     size_t time = database[0].Meter.size();
 
+    // So the program doesn't have to waste a couple seconds downloading off the internet every run
+    string startDate = database[0].Meter[0].Date;
+    string endDate = database[0].Meter[time - 1].Date;
+    if (!filesystem::exists(weatherPath))
+    {
+        string runWeather = "python3 Setup/Fetch_Weather.py " + startDate + " " + endDate + " " + "\"" + weatherPath + "\"";
+        system(runWeather.c_str());
+    }
+
+    Vector<string> startAndEnd = getStartAndEndDates(weatherPath);
+
+    if ((startDate != startAndEnd[0] || endDate != startAndEnd[1]) && startAndEnd.size() == 2)
+    {
+        string runWeather = "python3 Setup/Fetch_Weather.py " + startDate + " " + endDate + " " + "\"" + weatherPath + "\"";
+        system(runWeather.c_str());
+    }
+
+    Vector<WeatherData> weather = parseWeatherCSV(weatherPath);
+
     // Simulator config
     if (!isBaseline)
     {
@@ -57,6 +78,7 @@ int main()
             GHHS->setBESS_Sim(true, 600.0, 0.0, 45.0, 25.0);
         }
     }
+
     // Simulation
     for (size_t tick = 0; tick < time; tick++)
     {
@@ -67,8 +89,8 @@ int main()
     cout << "Simulation complete. Generating graphs in " << targetFolder << "..." << endl;
 
     // Send to python/results
-    runPython = "python3 Visualizer/visualizer.py " + targetFolder;
-    system(runPython.c_str());
+    runVisualizer = "python3 Visualizer/visualizer.py " + targetFolder;
+    system(runVisualizer.c_str());
     cout << Graph.getOverloadTicks() << endl;
 
     // Cleanup

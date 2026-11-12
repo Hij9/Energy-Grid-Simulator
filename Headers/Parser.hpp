@@ -29,6 +29,22 @@ Vector<IntervalData> parseCSV(const std::string &path);
 Vector<MasterMeterProfile> getMMPList(const std::string &rootFolder);
 
 /**
+ * @brief
+ *
+ * @param weatherPath
+ * @return Vector<WeatherData>
+ */
+Vector<WeatherData> parseWeatherCSV(const std::string &weatherPath);
+
+/**
+ * @brief
+ *
+ * @param weatherPath
+ * @return Vector<std::string>
+ */
+Vector<std::string> getStartAndEndDates(const std::string &weatherPath);
+
+/**
  * @brief A dictionary via hashmap of all site squarefootage, needs to be updated manually
  */
 std::unordered_map<std::string, int> sqft();

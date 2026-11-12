@@ -7,4 +7,4 @@ This may be deleted when the final version is published, and is not a functional
 3. Model battery degradation over time? (Need research to find how)
 4. (When AI was asked) Use different threads to run different simulations to find what differnt battery capacity numbers would do and create a visualization off of that
 5. Create an easy (doesn't have to be asthetically impressive), user-friendly GUI where visualizations and simulator configs are built-in/can be changed from there instead of having to manipulate the driver program directly
-6. Research the RC Circuit Differential Equation (because an equation used for RC circuits can be used for thermodynamics for some reason??? That's crazy and incredible) and replace the demand multiplier, also use Euler's method? Research alternatives
+6. Use the Thermal RC Circuit ODE and the RK4 method to help model HVAC retrofits with greater accuracy (still insane how we use an ODE for electric circuits to describe thermodynamics...Beuken was crazy)

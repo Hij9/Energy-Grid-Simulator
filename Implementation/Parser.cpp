@@ -40,7 +40,7 @@ Vector<IntervalData> parseCSV(const std::string &path)
     // Error trap
     if (!file.is_open())
     {
-        std::cerr << "Error: could not open file" << path << std::endl;
+        std::cerr << "Error: could not open file " << path << std::endl;
         return Vector<IntervalData>();
     }
 
@@ -55,6 +55,7 @@ Vector<IntervalData> parseCSV(const std::string &path)
     Vector<IntervalData> parsedTick;
     IntervalData currentTick;
     std::string cell;
+    std::stringstream ss;
 
     // Parsing loop (per line of data)
     while (std::getline(file, line))
@@ -68,7 +69,8 @@ Vector<IntervalData> parseCSV(const std::string &path)
             continue;
         }
 
-        std::stringstream ss(line);
+        ss.clear();
+        ss.str(line);
 
         // Parse and store
         std::getline(ss, currentTick.Date, ',');
@@ -196,6 +198,137 @@ Vector<MasterMeterProfile> getMMPList(const std::string &rootFolder)
     }
 
     return SchoolInformation;
+}
+
+Vector<WeatherData> parseWeatherCSV(const std::string &weatherPath)
+{
+    std::ifstream weather(weatherPath);
+
+    if (!weather.is_open())
+    {
+        // I might go back and take all of these types of lines out and replace with exceptions, I just don't really like nesting in a try-catch block
+        std::cerr << "Error: Weather CSV file failed to open." << std::endl;
+        return Vector<WeatherData>();
+    }
+
+    std::string line;
+    std::string data;
+    WeatherData currentLine;
+    Vector<WeatherData> output;
+    std::stringstream ss;
+
+    while (std::getline(weather, line))
+    {
+        // I'm unsure if I have to face the same issue in this CSV but I'll clean the line just in case
+        line.erase(std::remove(line.begin(), line.end(), '"'), line.end());
+
+        if (std::count(line.begin(), line.end(), ',') != 2)
+        {
+            continue;
+        }
+
+        ss.clear();
+        ss.str(line);
+
+        std::getline(ss, currentLine.timestamp, ',');
+
+        std::getline(ss, data, ',');
+        currentLine.temperature = std::stod(data);
+
+        std::getline(ss, data, ',');
+        currentLine.irradiance = std::stod(data);
+
+        output.push_back(currentLine);
+    }
+    weather.close();
+    return output;
+}
+
+Vector<std::string> getStartAndEndDates(const std::string &weatherPath)
+{
+    // Open file and check
+    std::ifstream weather(weatherPath, std::ios::binary);
+
+    if (!weather.is_open())
+    {
+        std::cerr << "Error: Weather CSV file failed to open." << std::endl;
+        return Vector<std::string>();
+    }
+
+    // Vars
+    std::string line;
+    std::string firstLine;
+    std::string lastLine;
+    Vector<std::string> output;
+    bool isQuoted = false;
+
+    while (std::getline(weather, line))
+    {
+        // Check for correct comma count (2)
+        if (std::count(line.begin(), line.end(), ',') != 2)
+        {
+            continue;
+        }
+
+        // Check for and and erase quotes on the first line
+        if (std::count(line.begin(), line.end(), '"') > 0)
+        {
+            isQuoted = true;
+            line.erase(std::remove(line.begin(), line.end(), '"'), line.end());
+        }
+
+        // Get the first line and put it to the output
+        firstLine = line.substr(0, line.find(','));
+        output.push_back(firstLine);
+        break;
+    }
+
+    // Move to end of file and save position in pos
+    weather.seekg(0, std::ios::end);
+    std::streampos pos = weather.tellg();
+    char throwAway;
+
+    while (pos > 0)
+    {
+        pos -= 1;
+        weather.seekg(pos);
+        weather.get(throwAway);
+        if (throwAway != '\n' && throwAway != '\r')
+        {
+            break;
+        }
+    }
+
+    while (pos > 0)
+    {
+        pos -= 1;
+        weather.seekg(pos);
+        weather.get(throwAway);
+        if (throwAway == '\n')
+        {
+            break;
+        }
+    }
+
+    // Make sure the quotes don't interfere with data collection
+    if (isQuoted)
+    {
+        pos += 1;
+        weather.seekg(pos);
+        std::getline(weather, lastLine, '"');
+    }
+    else
+    {
+        std::getline(weather, lastLine, ',');
+    }
+
+    output.push_back(lastLine);
+
+    // Format the output into SCE | (0,4) = YYYY, (5,2) = MM, (8,2) = DD | + extra space at the end
+    output[0] = output[0].substr(5, 2) + "/" + output[0].substr(8, 2) + "/" + output[0].substr(0, 4) + " ";
+    output[1] = output[1].substr(5, 2) + "/" + output[1].substr(8, 2) + "/" + output[1].substr(0, 4) + " ";
+
+    return output;
 }
 
 std::unordered_map<std::string, int> sqft()
